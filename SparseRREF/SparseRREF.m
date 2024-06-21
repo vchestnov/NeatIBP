@@ -32,10 +32,12 @@ SRSparseDims[c_SparseArray] :=
 SRNonZeroValues[d_SparseArray] :=
         Length[d["NonzeroValues"]];
 
+(* NOTE this function is used in the SyzygyRed.wl, CheckIBP.wl, FFSolveIBP.wl *)
 SRSparseRowReduce[e_SparseArray, Modulus->f_Integer] :=Module[{normalized},
         normalized = Cancel[e,Modulus->f];
         SRRREF[SRSparsePos[normalized], SRSparseValues[normalized], SRSparseDims[normalized], SRNonZeroValues[normalized], f]];
 
+(* NOTE this function is used in the SyzygyRed.wl *)
 SRFindPivots[g_SparseArray, Modulus->h_Integer] :=Module[{normalized},
         normalized = Cancel[g,Modulus->h];
         SRFP[SRSparsePos[normalized], SRSparseValues[normalized], SRSparseDims[normalized], SRNonZeroValues[normalized],h]];
@@ -47,7 +49,6 @@ SRLoadLib[] := Module[
     {},
     srrreflib = FileNameJoin[{DirectoryName[$InputFileName],"SparseRREF.so"}];
     sprreflib = SpaSMLibrary;
-      (*sprreflib = "/usr/local/lib/libspasm.so";*)
      
     If[TrueQ[srrreflib == $Failed],
        Message[SR::nolib];,
