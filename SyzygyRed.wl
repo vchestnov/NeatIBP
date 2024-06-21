@@ -1923,7 +1923,8 @@ MinISPD=OptionValue[MinISPDegreeForAnalysis],pivotList,zMaps,newSelfSymmetries,L
 				]				
 			];
 			If[i>=MinISPD,
-				M=SRSparseRowReduce[CoefficientArrays[IBPs,IntList][[2]],Modulus->OptionValue[Modulus]];
+				(* M=SRSparseRowReduce[CoefficientArrays[IBPs,IntList][[2]],Modulus->OptionValue[Modulus]]; *)
+				M=RowReduceFunction[CoefficientArrays[IBPs,IntList][[2]],Modulus->OptionValue[Modulus]];
 				pivotList=pivots[M];
 				
 				irreducibleInts=IntList[[Complement[Range[Length[IntList]],pivotList]]];
