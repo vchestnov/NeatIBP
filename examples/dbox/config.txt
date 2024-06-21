@@ -9,7 +9,8 @@ targetIntegralsFile = workingPath<>"targetIntegrals.txt";
 
 (*-----------dependency settings---------*)
 SingularApp = "/usr/bin/Singular";
-SparseRREF`SpaSMLibrary = "/usr/local/lib/libspasm.so";
+(* SparseRREF`SpaSMLibrary = "/usr/local/lib/libspasm.so"; *)
+SparseRREF`SpaSMLibrary = "/home/seva/soft/spasm/build-v1.2/lib/libspasm.so.0.0.0";
 
 (*-----------directory settings----------*)
 ReductionOutputName="dbox";
