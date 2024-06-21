@@ -111,7 +111,8 @@ Options[ffRowReduce] = {
     Nothing
 };
 Condition[
-    ffRowReduce[matrix:(_List | _SparseArray), opt:OptionsPattern[]],
+    (* ffRowReduce[matrix:(_List | _SparseArray), opt:OptionsPattern[]], *)
+    ffRowReduce[matrix_SparseArray, opt:OptionsPattern[]],
     And[
         SameQ[matrix // ArrayDepth[#, AllowedHeads -> "ListLike"]&, 2],
         True
@@ -121,7 +122,10 @@ Condition[
         g, data, vals,
         res, rref
     },
-    {data, vals} = matrix // SparseArray[#, # // Dimensions]& // todata // TM["todata"];
+    (* NOTE unexplainable hack that helps to avoid hard crash in the next line *)
+    matrix // ArrayRules // TM["ArrayRules"];
+    (* {data, vals} = matrix // SparseArray[#, # // Dimensions]& // todata // TM["todata"]; *)
+    {data, vals} = matrix // todata // TM["todata"];
     FFNewGraph[g, "in", {}];
     FFAlgRatNumEval[g, "vals", vals] // TM["FFAlgRatNumEval"];
     FFAlgNodeSparseSolver[
