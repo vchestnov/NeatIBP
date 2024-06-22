@@ -20,7 +20,7 @@ If[commandLineMode,
 	missionInput=$CommandLine[[-1]];*)
 	MathematicaCommand=Import[packagePath<>"/preload/MathematicaCommand.txt"];
 	ShellProcessor=Import[packagePath<>"/preload/ShellProcessor.txt"];
-	,
+,
 	Print["WARNING: program is not running in command line mode!"];
 	packagePath=NotebookDirectory[];
 	workingPath="/home/zihao/projects/SyzygyRed/Parallelization/github/NeatIBP/examples/dbox/";

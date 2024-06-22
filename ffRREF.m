@@ -35,7 +35,7 @@ todata[xs:(_List | _SparseArray)] := xs // RightComposition[
 (*reconstruct*)
 
 ClearAll @ reconstruct;
-reconstruct[data_, post_:Identity] := RightComposition[
+reconstruct[data_, dims_List, post_:Identity] := RightComposition[
     Rule[
         data // RightComposition[
             ArrayRules,
@@ -48,7 +48,8 @@ reconstruct[data_, post_:Identity] := RightComposition[
     ]&,
     Thread,
     post,
-    SparseArray[#, data // Dimensions]&,
+    (* SparseArray[#, data // Dimensions]&, *)
+    SparseArray[#, dims]&,
     Identity
 ];
 
@@ -122,6 +123,10 @@ Condition[
         g, data, vals,
         res, rref
     },
+    Print[
+        "Enter ffRowReduce. Using PrimeNo = ", OptionValue["PrimeNo"],
+        ", OnlyLearn = ", OptionValue["OnlyLearn"]
+    ];
     (* NOTE unexplainable hack that helps to avoid hard crash in the next line *)
     matrix // ArrayRules // TM["ArrayRules"];
     (* {data, vals} = matrix // SparseArray[#, # // Dimensions]& // todata // TM["todata"]; *)
@@ -143,6 +148,7 @@ Condition[
         data // Dimensions // Last // Range
     ] // TM["FFSparseSolverLearn"];
     If[OptionValue["OnlyLearn"],
+        Print["Exit ffRowReduce"];
         Return[learn]
     ,
         FFSparseSolverMarkAndSweepEqs[g, "solver"];
@@ -163,11 +169,14 @@ Condition[
                     sparsesol[learn],
                     densesol[learn]
                 ],
+                (* data // Dimensions, *)
+                matrix // Dimensions,
                 Join[#, learn[[1, 2]] // MapIndexed[{#2[[1]], #1} -> 1&, #]&]&
             ],
             Permute[#, learn[[1, 2]] // FindPermutation // InversePermutation]&,
             Identity
         ];
+        Print["Exit ffRowReduce"];
         Return[rref]
     ]
 ];

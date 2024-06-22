@@ -33,14 +33,20 @@ SRNonZeroValues[d_SparseArray] :=
         Length[d["NonzeroValues"]];
 
 (* NOTE this function is used in the SyzygyRed.wl, CheckIBP.wl, FFSolveIBP.wl *)
-SRSparseRowReduce[e_SparseArray, Modulus->f_Integer] :=Module[{normalized},
-        normalized = Cancel[e,Modulus->f];
-        SRRREF[SRSparsePos[normalized], SRSparseValues[normalized], SRSparseDims[normalized], SRNonZeroValues[normalized], f]];
+SRSparseRowReduce[e_SparseArray, Modulus->f_Integer] := Module[{normalized},
+    Print["Enter SRFindPivots. Using Modulus = ", f];
+    normalized = Cancel[e,Modulus->f];
+    SRRREF[SRSparsePos[normalized], SRSparseValues[normalized], SRSparseDims[normalized], SRNonZeroValues[normalized], f]
+    Print["Exit SRFindPivots"];
+];
 
 (* NOTE this function is used in the SyzygyRed.wl *)
-SRFindPivots[g_SparseArray, Modulus->h_Integer] :=Module[{normalized},
-        normalized = Cancel[g,Modulus->h];
-        SRFP[SRSparsePos[normalized], SRSparseValues[normalized], SRSparseDims[normalized], SRNonZeroValues[normalized],h]];
+SRFindPivots[g_SparseArray, Modulus->h_Integer] := Module[{normalized},
+    Print["Enter SRFindPivots. Using Modulus = ", h];
+    normalized = Cancel[g,Modulus->h];
+    SRFP[SRSparsePos[normalized], SRSparseValues[normalized], SRSparseDims[normalized], SRNonZeroValues[normalized],h]
+    Print["Exit SRFindPivots"];
+];
 
 srrreflib = $Failed;
 sprreflib = $Failed;

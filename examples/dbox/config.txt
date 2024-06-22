@@ -20,6 +20,7 @@ outputPath=Automatic;
 (*-----------math settings---------------*)
 OptionSimplification = 12;
 FiniteFieldModulus=42013;(*do not use any prime number larger than 46337*)
+ffPrimeNo = 0;
 AzuritinoIntersectionDegreeBound=0
 NeatIBPIntersectionDegreeBound=5
 
@@ -35,6 +36,6 @@ CriticalPointInAzuritino=True;
 
 (*-----------usage settings--------------*)
 MemoryUsedLimit=Infinity;(*MB*)
-ThreadUsedLimit=Infinity;
+ThreadUsedLimit=8;
 DeleteSingularTempFiles=True;
 
