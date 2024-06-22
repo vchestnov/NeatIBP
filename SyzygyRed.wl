@@ -3737,13 +3737,20 @@ IndepedentSet[IBPs_,Ints_,OptionsPattern[]]:=Module[{M,RM,redIndex,indepIndex,ti
 ];
 If[UseSRFindPivots===True,ClearAll[IndepedentSet];
 Options[IndepedentSet]:={Modulus->FiniteFieldModulus};
-IndepedentSet[IBPs_,Ints_,OptionsPattern[]]:=Module[{M,redIndex,indepIndex,timer,memoryUsed},
+IndepedentSet[IBPs_,Ints_,OptionsPattern[]]:=Module[{M,redIndex,indepIndex,ffindepIndex,timer,memoryUsed},
 	M=CoefficientArrays[IBPs,Ints][[2]];
 	(*ProbeIntermediateResult["M_IndepedentSet",secNum,M];(*debug20231227*)*)
 	timer=AbsoluteTime[];
 	memoryUsed=MaxMemoryUsed[
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t  RREF-pivots finding in IndepedentSet started. Matrix dimension: ",Dimensions[M//Transpose]]];
-	indepIndex=SRFindPivots[M//Transpose,Modulus->OptionValue[Modulus]];
+	(* indepIndex=SRFindPivots[M//Transpose,Modulus->OptionValue[Modulus]]; *)
+	(* FIXME add `PrimeNo` option support *)
+	ffindepIndex=ffFindPivots[M//Transpose];
+	If[TimingReportOfRowReduce === True,
+	    (* PrintAndLog["#", secNum, "\t\t\t indepIndex=", indepIndex]; *)
+	    PrintAndLog["#", secNum, "\t\t\t ffindepIndex=", ffindepIndex];
+    ];
+    indepIndex = ffindepIndex;
 	(*end of MaxMemoryUsed*)];
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t\t  RREF-pivots finding in IndepedentSet finished. Matrix dimension: ",Dimensions[M//Transpose],". Time used: ",Round[AbsoluteTime[]-timer], " second(s). Memory used: ",Round[memoryUsed/(1024^2)]," MB."]];
 	Return[indepIndex];
