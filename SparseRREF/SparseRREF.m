@@ -34,7 +34,7 @@ SRNonZeroValues[d_SparseArray] :=
 
 (* NOTE this function is used in the SyzygyRed.wl, CheckIBP.wl, FFSolveIBP.wl *)
 SRSparseRowReduce[e_SparseArray, Modulus->f_Integer] := Module[{normalized},
-    Print["Enter SRFindPivots. Using Modulus = ", f];
+    Print["Enter SRSparseRowReduce. Using Modulus = ", f];
     normalized = Cancel[e,Modulus->f];
     SRRREF[SRSparsePos[normalized], SRSparseValues[normalized], SRSparseDims[normalized], SRNonZeroValues[normalized], f]
 ];
