@@ -36,6 +36,6 @@ CriticalPointInAzuritino=True;
 
 (*-----------usage settings--------------*)
 MemoryUsedLimit=Infinity;(*MB*)
-ThreadUsedLimit=Infinity;
+ThreadUsedLimit=8;
 DeleteSingularTempFiles=True;
 
