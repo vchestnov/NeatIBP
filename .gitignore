@@ -5,5 +5,5 @@ test.sh
 debug_temp
 temp_files
 test
-examples/dbox/outputs/
+examples/*/outputs/
 garage/
