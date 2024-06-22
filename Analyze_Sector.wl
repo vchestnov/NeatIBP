@@ -169,6 +169,12 @@ If[Get[packagePath<>"SparseRREF/SparseRREF.m"]===$Failed,
 	Exit[]
 ]
 
+If[Get[packagePath<>"ffRREF.m"]===$Failed,
+	PrintAndLog["Unable to Get ffRREF. Exiting."];
+	Run["echo "<>ToString[sectorID]<>":\tExit[Unable to Get ffRREF]\t"<>ToString[InputForm[FromUnixTime[UnixTime[]]]]<>" >> "<>outputPath<>"tmp/log2.txt"];
+	Exit[]
+]
+
 
 If[!DirectoryQ[#],Run["mkdir "<>#]]&[outputPath<>"tmp/"]
 TemporaryDirectory = outputPath<>"tmp/singular_temp/singular_temp_"<>ToString[sectorID]<>"/"
