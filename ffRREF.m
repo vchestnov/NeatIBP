@@ -180,10 +180,15 @@ Condition[
 (* ::Subsection::Closed:: *)
 (*ffFindPivots*)
 
+ClearAll @ ffFindPivots;
+Options[ffFindPivots] = {
+    PrimeNo -> 0,
+    Nothing
+};
 Condition[
-    ffFindPivots[matrix:(_List | _SparseArray)],
+    ffFindPivots[matrix_SparseArray, opt:OptionsPattern[]],
     And[
         SameQ[matrix // ArrayDepth[#, AllowedHeads -> "ListLike"]&, 2],
         True
     ]
-] := "DepVars" // ReplaceAll[ffRowReduce[matrix, OnlyLearn -> True]] // Sort;
+] := "DepVars" // ReplaceAll[ffRowReduce[matrix, OnlyLearn -> True, opt]] // Sort;
