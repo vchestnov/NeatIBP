@@ -1398,9 +1398,8 @@ IntegralRealization[FundamentalIBP_,degree_]:=FundamentalIBP/.Dispatch[Table[m[i
 ]*)
 
 
-(* FIXME this doesn't work correctly in Mathematica 13.0. The issue is the
- * _assumed_ lexicographic sorting in GatherBy which doesn't happen. Added a
- * fix.
+(* NOTE this didn't work correctly in Mathematica 13.0. The issue was the
+ * _assumed_ lexicographic sorting in GatherBy which doesn't happen. Fixed it.
  *)
 pivots1[matrix_]:=Module[{ARLonglist},
 	(* ARLonglist=GatherBy[matrix//ArrayRules,#[[1,1]]&]; *)
@@ -1941,14 +1940,15 @@ MinISPD=OptionValue[MinISPDegreeForAnalysis],pivotList,zMaps,newSelfSymmetries,L
 				(* M=SRSparseRowReduce[CoefficientArrays[IBPs,IntList][[2]],Modulus->OptionValue[Modulus]]; *)
 				(* M=RowReduceFunction[CoefficientArrays[IBPs,IntList][[2]],Modulus->OptionValue[Modulus]]; *)
 				M = CoefficientArrays[IBPs,IntList][[2]];
-				RM = RowReduceFunction[M, Modulus -> OptionValue[Modulus]];
+				(* RM = RowReduceFunction[M, Modulus -> OptionValue[Modulus]]; *)
 				ffRM = ffRowReduce[M, PrimeNo -> ffPrimeNo];
                 If[TimingReportOfRowReduce===True,
                     (* PrintAndLog["#", secNum, "\t\t  M: ", M]; *)
                     PrintAndLog["#", secNum, "\t\t  RM: ", Dimensions[RM]];
                     PrintAndLog["#", secNum, "\t\t  ffRM: ", Dimensions[ffRM]];
                 ];
-                (* RM = ffRM; *)
+                (* NOTE we switch the finite field here *)
+                RM = ffRM;
 				pivotList=pivots[RM];
                 If[TimingReportOfRowReduce===True,
                     (* PrintAndLog["#", secNum, "\t\t  M: ", M]; *)
@@ -3716,14 +3716,15 @@ IBPAnalyze[IBPs_,Ints_,OptionsPattern[]]:=Module[{M,RM,ffRM,redIndex,irredIndex,
 	memoryUsed=MaxMemoryUsed[
 	(*ProbeIntermediateResult["M_IBPAnalyze",secNum,M];*)
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t  RowReduce in IBPAnalyze started. Matrix dimension: ",Dimensions[M]]];
-	RM=RowReduceFunction[M,Modulus->OptionValue[Modulus]];
+	(* RM=RowReduceFunction[M,Modulus->OptionValue[Modulus]]; *)
 	ffRM=ffRowReduce[M, PrimeNo -> ffPrimeNo];
 	If[TimingReportOfRowReduce===True,
 	    (* PrintAndLog["#", secNum, "\t\t  M: ", M]; *)
 	    PrintAndLog["#", secNum, "\t\t  RM: ",Dimensions[RM]];
 	    PrintAndLog["#", secNum, "\t\t  ffRM: ",Dimensions[ffRM]];
     ];
-    (* RM = ffRM; *)
+    (* NOTE we switch the finite field here *)
+    RM = ffRM;
 	(*end of MaxMemoryUsed*)];
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t\t  RowReduce in IBPAnalyze finished. Matrix dimension: ",Dimensions[M],". Time used: ",Round[AbsoluteTime[]-timer], " second(s). Memory used: ",Round[memoryUsed/(1024^2)]," MB."]];
 	
@@ -3761,14 +3762,15 @@ IndepedentSet[IBPs_,Ints_,OptionsPattern[]]:=Module[{M,RM,ffRM,redIndex,indepInd
 	memoryUsed=MaxMemoryUsed[
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t  RowReduce in IndepedentSet started. Matrix dimension: ",Dimensions[M//Transpose]]];
 	
-	RM=RowReduceFunction[M//Transpose,Modulus->OptionValue[Modulus]];
+	(* RM=RowReduceFunction[M//Transpose,Modulus->OptionValue[Modulus]]; *)
 	ffRM=ffRowReduce[M // Transpose, PrimeNo -> ffPrimeNo];
 	If[TimingReportOfRowReduce===True,
 	    (* PrintAndLog["#", secNum, "\t\t  M: ", M]; *)
 	    PrintAndLog["#", secNum, "\t\t  RM: ", Dimensions[RM]];
 	    PrintAndLog["#", secNum, "\t\t  ffRM: ", Dimensions[ffRM]];
     ];
-    (* RM = ffRM; *)
+    (* NOTE we switch the finite field here *)
+    RM = ffRM;
 	(*end of MaxMemoryUsed*)];
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t\t  RowReduce in IndepedentSet finished. Matrix dimension: ",Dimensions[M//Transpose],". Time used: ",Round[AbsoluteTime[]-timer], " second(s). Memory used: ",Round[memoryUsed/(1024^2)]," MB."]];
 (*	timer=AbsoluteTime[];
@@ -3792,7 +3794,6 @@ IndepedentSet[IBPs_,Ints_,OptionsPattern[]]:=Module[{M,redIndex,indepIndex,ffind
 	memoryUsed=MaxMemoryUsed[
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t  RREF-pivots finding in IndepedentSet started. Matrix dimension: ",Dimensions[M//Transpose]]];
 	(* indepIndex=SRFindPivots[M//Transpose,Modulus->OptionValue[Modulus]]; *)
-	(* FIXME add `PrimeNo` option support *)
 	ffindepIndex=ffFindPivots[M // Transpose, PrimeNo -> ffPrimeNo];
 	If[TimingReportOfRowReduce === True,
 	    (* PrintAndLog["#", secNum, "\t\t\t indepIndex=", indepIndex]; *)
@@ -3833,14 +3834,15 @@ UsedRelations[IBPs_,ReducedIntegrals_,MIs_,OptionsPattern[]]:=Module[{Ints,M,Mex
 	timer=AbsoluteTime[];
 	memoryUsed=MaxMemoryUsed[
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t  RowReduce in UsedRelations started. Matrix dimension: ",Dimensions[Mext]]];
-	RM=RowReduceFunction[Mext,Modulus->OptionValue[Modulus]];
+	(* RM=RowReduceFunction[Mext,Modulus->OptionValue[Modulus]]; *)
 	ffRM=ffRowReduce[Mext, PrimeNo -> ffPrimeNo];
 	If[TimingReportOfRowReduce===True,
 	    (* PrintAndLog["#", secNum, "\t\t  M: ", M]; *)
 	    PrintAndLog["#", secNum, "\t\t  RM: ", Dimensions[RM]];
 	    PrintAndLog["#", secNum, "\t\t  ffRM: ", Dimensions[ffRM]];
     ];
-    (* RM = ffRM; *)
+    (* NOTE we switch the finite field here *)
+    RM = ffRM;
 	(*end of MaxMemoryUsed*)];
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t\t  RowReduce in UsedRelations finished. Matrix dimension: ",Dimensions[Mext],". Time used: ",Round[AbsoluteTime[]-timer], " second(s). Memory used: ",Round[memoryUsed/(1024^2)]," MB."]];
 	(*timer=AbsoluteTime[];
