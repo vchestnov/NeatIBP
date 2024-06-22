@@ -1398,11 +1398,19 @@ IntegralRealization[FundamentalIBP_,degree_]:=FundamentalIBP/.Dispatch[Table[m[i
 ]*)
 
 
-pivots[matrix_]:=Module[{ARLonglist},
-	ARLonglist=GatherBy[matrix//ArrayRules,#[[1,1]]&];
+(* FIXME this doesn't work correctly in Mathematica 13.0. The issue is the
+ * _assumed_ lexicographic sorting in GatherBy which doesn't happen. Added a
+ * fix.
+ *)
+pivots1[matrix_]:=Module[{ARLonglist},
+	(* ARLonglist=GatherBy[matrix//ArrayRules,#[[1,1]]&]; *)
+	(* this is the fix *)
+	ARLonglist=GatherBy[matrix//ArrayRules,#[[1,1]]&] // Map[Sort];
 	Return[#[[1,1,2]]&/@(ARLonglist[[;;-2]])];
 ];
 
+deleteZeroRows = Apply[List] /* DeleteCases[x_ /; SameQ[x["Density"], 0.]] /* SparseArray;
+pivots[matrix_SparseArray] := matrix // deleteZeroRows // Map[#["NonzeroPositions"]& /* First] // Flatten;
 
 (* ::Section:: *)
 (*Symmetry *)
@@ -1940,7 +1948,18 @@ MinISPD=OptionValue[MinISPDegreeForAnalysis],pivotList,zMaps,newSelfSymmetries,L
                     PrintAndLog["#", secNum, "\t\t  RM: ", Dimensions[RM]];
                     PrintAndLog["#", secNum, "\t\t  ffRM: ", Dimensions[ffRM]];
                 ];
+                (* RM = ffRM; *)
 				pivotList=pivots[RM];
+                If[TimingReportOfRowReduce===True,
+                    (* PrintAndLog["#", secNum, "\t\t  M: ", M]; *)
+                    PrintAndLog["#", secNum, "\t\t  pivots[RM]: ", pivots[RM]];
+                    PrintAndLog["#", secNum, "\t\t  pivots[ffRM]: ", pivots[ffRM]];
+                    If[UnsameQ[pivots[RM], pivots[ffRM]],
+                        PrintAndLog["#", secNum, "\t\t  M: ", M];
+                        PrintAndLog["#", secNum, "\t\t  RM: ", RM];
+                        PrintAndLog["#", secNum, "\t\t  ffRM: ", ffRM];
+                    ]
+                ];
 				
 				irreducibleInts=IntList[[Complement[Range[Length[IntList]],pivotList]]];
 				
@@ -3704,6 +3723,7 @@ IBPAnalyze[IBPs_,Ints_,OptionsPattern[]]:=Module[{M,RM,ffRM,redIndex,irredIndex,
 	    PrintAndLog["#", secNum, "\t\t  RM: ",Dimensions[RM]];
 	    PrintAndLog["#", secNum, "\t\t  ffRM: ",Dimensions[ffRM]];
     ];
+    (* RM = ffRM; *)
 	(*end of MaxMemoryUsed*)];
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t\t  RowReduce in IBPAnalyze finished. Matrix dimension: ",Dimensions[M],". Time used: ",Round[AbsoluteTime[]-timer], " second(s). Memory used: ",Round[memoryUsed/(1024^2)]," MB."]];
 	
@@ -3748,6 +3768,7 @@ IndepedentSet[IBPs_,Ints_,OptionsPattern[]]:=Module[{M,RM,ffRM,redIndex,indepInd
 	    PrintAndLog["#", secNum, "\t\t  RM: ", Dimensions[RM]];
 	    PrintAndLog["#", secNum, "\t\t  ffRM: ", Dimensions[ffRM]];
     ];
+    (* RM = ffRM; *)
 	(*end of MaxMemoryUsed*)];
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t\t  RowReduce in IndepedentSet finished. Matrix dimension: ",Dimensions[M//Transpose],". Time used: ",Round[AbsoluteTime[]-timer], " second(s). Memory used: ",Round[memoryUsed/(1024^2)]," MB."]];
 (*	timer=AbsoluteTime[];
@@ -3819,6 +3840,7 @@ UsedRelations[IBPs_,ReducedIntegrals_,MIs_,OptionsPattern[]]:=Module[{Ints,M,Mex
 	    PrintAndLog["#", secNum, "\t\t  RM: ", Dimensions[RM]];
 	    PrintAndLog["#", secNum, "\t\t  ffRM: ", Dimensions[ffRM]];
     ];
+    (* RM = ffRM; *)
 	(*end of MaxMemoryUsed*)];
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t\t  RowReduce in UsedRelations finished. Matrix dimension: ",Dimensions[Mext],". Time used: ",Round[AbsoluteTime[]-timer], " second(s). Memory used: ",Round[memoryUsed/(1024^2)]," MB."]];
 	(*timer=AbsoluteTime[];
