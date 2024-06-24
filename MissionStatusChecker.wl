@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
 MemoryUsedLimit=Infinity
-ThreadUsedLimit=Infinity
+ThreadUsedLimit=8
 (*why?*)
 
 

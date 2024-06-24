@@ -1410,6 +1410,7 @@ pivots1[matrix_]:=Module[{ARLonglist},
 
 deleteZeroRows = Apply[List] /* DeleteCases[x_ /; SameQ[x["Density"], 0.]] /* SparseArray;
 pivots[matrix_SparseArray] := matrix // deleteZeroRows // Map[#["NonzeroPositions"]& /* First] // Flatten;
+pivots[matrix_List] := pivots1[matrix];
 
 (* ::Section:: *)
 (*Symmetry *)
@@ -3714,7 +3715,7 @@ IBPAnalyze[IBPs_,Ints_,OptionsPattern[]]:=Module[{M,RM,ffRM,redIndex,irredIndex,
 	
 	timer=AbsoluteTime[];
 	memoryUsed=MaxMemoryUsed[
-	(*ProbeIntermediateResult["M_IBPAnalyze",secNum,M];*)
+	ProbeIntermediateResult["M_IBPAnalyze",secNum,M];
 	If[TimingReportOfRowReduce===True,PrintAndLog["#",secNum,"\t\t  RowReduce in IBPAnalyze started. Matrix dimension: ",Dimensions[M]]];
 	(* RM=RowReduceFunction[M,Modulus->OptionValue[Modulus]]; *)
 	ffRM=ffRowReduce[M, PrimeNo -> ffPrimeNo];
@@ -3797,7 +3798,7 @@ IndepedentSet[IBPs_,Ints_,OptionsPattern[]]:=Module[{M,redIndex,indepIndex,ffind
 	ffindepIndex=ffFindPivots[M // Transpose, PrimeNo -> ffPrimeNo];
 	If[TimingReportOfRowReduce === True,
 	    (* PrintAndLog["#", secNum, "\t\t\t indepIndex=", indepIndex]; *)
-	    PrintAndLog["#", secNum, "\t\t\t ffindepIndex=", ffindepIndex];
+	    PrintAndLog["#", secNum, "\t\t\t ffindepIndex has ", ffindepIndex // Length, " elements."];
     ];
     indepIndex = ffindepIndex;
 	(*end of MaxMemoryUsed*)];
