@@ -5,3 +5,5 @@ test.sh
 debug_temp
 temp_files
 test
+examples/*/outputs/
+garage/

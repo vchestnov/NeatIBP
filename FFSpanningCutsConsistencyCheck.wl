@@ -57,6 +57,7 @@ TemporaryDirectory=outputPath<>"tmp"
 (*Get[packagePath<>"SyzygyRed.wl"]*)
 
 Get[packagePath<>"SparseRREF/SparseRREF.m"]
+Get[packagePath<>"ffRREF.m"]
 
 
 
