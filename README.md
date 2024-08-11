@@ -1,8 +1,10 @@
-# NeatIBP
+# `FiniteFlow`-based fork of `NeatIBP`
 ## Usage
 NeatIBP is a mathematica package to generate small-sized integration-by-parts (IBP) relations for Feynman integral reduction.
+In this fork, we use `FiniteFlow` instead of `SpaSM` for row reduction of
+numerical linear systems, as it has proven to be more robust in our experience.
 
-## Version
+## Version (upstream)
 1.0.5.0
 
 ## Dependencies
@@ -12,12 +14,26 @@ Singular is a computer algebra system for polynomial computations. Home page lin
 
 https://www.singular.uni-kl.de/
 
-**SpaSM**
+**FiniteFlow**
+
+Generic purpose framework for designing and implementing numerical algorithms
+over finite fields.
+
+https://github.com/peraro/finiteflow
+
+**SpaSM** (not used)
 
 SpaSM is a C library developed to perform sparse gaussian elimination modulo a small prime p. Github repo. link:
 
 https://github.com/cbouilla/spasm
 
+Not used in this fork, but there might be some leftovers from
+[upstream](https://github.com/yzhphy/NeatIBP) that we
+still need to clean.
+
+---
+
+The rest of the file below is from [upstream](https://github.com/yzhphy/NeatIBP)
 
 ## Installation
 
