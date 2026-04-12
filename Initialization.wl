@@ -49,8 +49,8 @@ PrintAndLog[x___]:=Module[{string,originalString},
 
 
 
-readmeTextLines=Import[packagePath<>"README.md"];
-versionNumber=DeleteCases[StringSplit[StringSplit[readmeTextLines,"## Version"][[2]],"\n"],""][[1]];
+readmeTextLines=Import[packagePath<>"README.md", "Text"];
+versionNumber=DeleteCases[StringSplit[StringSplit[readmeTextLines,"## Version"~~ Shortest[___] ~~ EndOfLine][[2]],"\n"],""][[1]];
 Print["================================================================
 NeatIBP version "<>versionNumber<>"
 by: Janko Boehm, Rourou Ma, Johann Usovitsch, Hefeng Xu, Yingxuan Xu, Zihao Wu and Yang Zhang.
